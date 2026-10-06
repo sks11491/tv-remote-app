@@ -1,0 +1,20 @@
+{
+  "port": 3000,
+
+  "playerPath": "",
+  "playerArgs": [],
+  "fullscreen": true,
+  "closeWhenDone": true,
+  "endGraceSeconds": 3,
+
+  "mediaDir": "",
+  "iconDir": "",
+
+  "buttons": [
+    { "id": "1", "label": "Intro",   "icon": "icons/1.svg", "file": "media/intro.mp4" },
+    { "id": "2", "label": "Demo",    "icon": "icons/2.svg", "file": "media/demo.mp4" },
+    { "id": "3", "label": "Product", "icon": "icons/3.svg", "file": "media/product.mp4" },
+    { "id": "4", "label": "Team",    "icon": "icons/4.svg", "file": "media/team.mp4" },
+    { "id": "5", "label": "Outro",   "icon": "icons/5.svg", "file": "media/outro.mp4" }
+  ]
+}

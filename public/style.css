@@ -1,0 +1,192 @@
+/*
+ * TV Video Remote -- styles
+ *
+ * Built for old smart-TV browsers (roughly Chrome 70):
+ *  - flexbox only, no CSS grid
+ *  - no `gap` on flexbox (margins instead -- `gap` is unsupported there)
+ *  - no custom properties, no clamp(), no aspect-ratio, no :focus-visible
+ *  - read from 3 metres away: labels are 36px, focus ring is 6px
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;              /* a TV page must never scroll */
+}
+
+body {
+  background-color: #0b0f15;
+  color: #e8eef7;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: none;                  /* there is no mouse on a TV */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------- banner */
+
+.banner {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  padding: 22px 32px;
+  font-size: 34px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 2px solid #1d2733;
+  -webkit-transition: background-color 150ms linear;
+  transition: background-color 150ms linear;
+}
+
+.banner-idle    { background-color: #121923; color: #8fa3bd; }
+.banner-playing { background-color: #10351f; color: #7df2a8; }
+.banner-error   { background-color: #3d1414; color: #ff9b9b; }
+
+/* ---------------------------------------------------------------- grid */
+
+.grid {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  padding: 10px 2%;
+}
+
+.loading {
+  font-size: 32px;
+  color: #6b7f99;
+}
+
+/*
+ * 28% wide + 1% side margins => three tiles fit on a row and the remaining two
+ * wrap onto a centred second row: the 3+2 layout, without CSS grid.
+ */
+.tile {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 28%;
+  min-width: 220px;
+  height: 30vh;
+  min-height: 190px;
+  margin: 12px 1%;
+  padding: 18px 12px;
+  background-color: #182230;
+  color: #e8eef7;
+  border: 3px solid #26354a;
+  border-radius: 18px;
+  font-family: inherit;
+  cursor: none;
+  outline: none;                 /* replaced by our own ring below */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-transition: -webkit-transform 120ms ease-out, background-color 120ms linear;
+  transition: transform 120ms ease-out, background-color 120ms linear;
+}
+
+.tile-icon {
+  width: 84px;
+  height: 84px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.tile-label {
+  font-size: 36px;              /* readable from 3 metres */
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * Focus must be unmistakable from across the room: thick bright ring, lighter
+ * background, and a scale-up. Driven by :focus, never :hover -- a TV remote has
+ * no pointer, so :hover would never fire.
+ */
+.tile:focus {
+  border-color: #ffd54a;
+  background-color: #24344a;
+  -webkit-box-shadow: 0 0 0 6px #ffd54a, 0 0 28px 6px rgba(255, 213, 74, 0.35);
+  box-shadow: 0 0 0 6px #ffd54a, 0 0 28px 6px rgba(255, 213, 74, 0.35);
+  -webkit-transform: scale(1.06);
+  transform: scale(1.06);
+}
+
+/* The video this button started is the one currently playing. */
+.tile-active {
+  border-color: #3ddc84;
+  background-color: #143a24;
+}
+
+.tile-active .tile-label {
+  color: #7df2a8;
+}
+
+/* Narrow or portrait screens (a phone used as the remote): one tile per row. */
+@media (max-width: 720px) {
+  .tile {
+    width: 90%;
+    height: auto;
+    min-height: 0;
+    padding: 14px;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+  }
+  .tile-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0;
+    margin-right: 18px;
+  }
+  .tile-label { font-size: 32px; text-align: left; }
+  .banner { font-size: 26px; padding: 16px; }
+}
