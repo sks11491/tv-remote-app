@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TV Video Remote</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Status / error banner. Text is swapped by app.js. -->
+  <div id="banner" class="banner banner-idle">
+    <span id="banner-text">Ready &mdash; pick a video</span>
+  </div>
+
+  <!-- Buttons are injected here from /api/buttons -->
+  <div id="grid" class="grid">
+    <p id="loading" class="loading">Loading&hellip;</p>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
