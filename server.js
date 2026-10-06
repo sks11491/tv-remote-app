@@ -49,7 +49,7 @@ function loadConfig() {
   cfg.playerPath = cfg.playerPath ? expandPath(cfg.playerPath) : '';
   cfg.playerArgs = Array.isArray(cfg.playerArgs) ? cfg.playerArgs : [];
   cfg.fullscreen = cfg.fullscreen !== false;
-  cfg.hideControls = cfg.hideControls !== false;
+  cfg.hideControls = cfg.hideControls === true;
   cfg.closeWhenDone = cfg.closeWhenDone !== false;
   cfg.endGraceSeconds = typeof cfg.endGraceSeconds === 'number' ? cfg.endGraceSeconds : 3;
   cfg.buttons = Array.isArray(cfg.buttons) ? cfg.buttons : [];

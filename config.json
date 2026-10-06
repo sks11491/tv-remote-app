@@ -4,7 +4,7 @@
   "playerPath": "C:/Program Files/VideoLAN/VLC/vlc.exe",
   "playerArgs": [],
   "fullscreen": true,
-  "hideControls": true,
+  "hideControls": false,
   "closeWhenDone": true,
   "endGraceSeconds": 3,
 

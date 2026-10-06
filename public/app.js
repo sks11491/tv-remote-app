@@ -231,19 +231,22 @@
   /* ----------------------------------------------------------- fullscreen */
 
   /*
-   * Hide the browser's address bar by going fullscreen. Browsers only allow
-   * that from a user action, so it happens on the first remote press, click
-   * or tap -- and again after it was left (Esc, Back), so the page settles
-   * back into fullscreen on the next press. Silently does nothing where the
+   * Hide the browser's address bar by going fullscreen. The page asks the
+   * moment it loads; browsers that insist on a user action first refuse that,
+   * so it is asked again on the first remote press, click or tap. Once the
+   * user leaves fullscreen themselves (Esc, Back), the page respects that and
+   * stays windowed until it is reloaded. Silently does nothing where the
    * browser does not support it.
    */
+  var userLeftFullscreen = false;
+
   function isFullscreen() {
     return !!(document.fullscreenElement || document.webkitFullscreenElement ||
               document.mozFullScreenElement || document.msFullscreenElement);
   }
 
   function enterFullscreen() {
-    if (isFullscreen()) { return; }
+    if (userLeftFullscreen || isFullscreen()) { return; }
     var el = document.documentElement;
     var req = el.requestFullscreen || el.webkitRequestFullscreen ||
               el.mozRequestFullScreen || el.msRequestFullscreen;
@@ -255,6 +258,15 @@
         result.then(null, function () {});
       }
     } catch (e) { /* not allowed here -- carry on windowed */ }
+  }
+
+  // Fullscreen ending while this window has focus is the user's doing (Esc).
+  // Ending while the video player has focus is not, so that is not counted.
+  var wasFullscreen = false;
+  function onFullscreenChange() {
+    var now = isFullscreen();
+    if (wasFullscreen && !now && document.hasFocus()) { userLeftFullscreen = true; }
+    wasFullscreen = now;
   }
 
   /* --------------------------------------------------------- build the UI */
@@ -374,6 +386,10 @@
   document.addEventListener('keydown', onKeyDown, false);
   document.addEventListener('click', enterFullscreen, false);
   document.addEventListener('touchend', enterFullscreen, false);
+  document.addEventListener('fullscreenchange', onFullscreenChange, false);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange, false);
+  document.addEventListener('mozfullscreenchange', onFullscreenChange, false);
+  document.addEventListener('MSFullscreenChange', onFullscreenChange, false);
 
   // No pointer affordances on a TV.
   document.addEventListener('contextmenu', function (e) { e.preventDefault(); }, false);
@@ -388,6 +404,7 @@
     if (document.activeElement === document.body && tiles.length) { tiles[0].focus(); }
   };
 
+  enterFullscreen();
   loadButtons();
   setInterval(pollStatus, POLL_MS);
 })();

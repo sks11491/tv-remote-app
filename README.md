@@ -81,7 +81,7 @@ On this laptop:  http://localhost:3000
 | `playerPath` | **Leave empty to use the laptop's default player.** Set it to a specific executable (e.g. `C:/Program Files/VideoLAN/VLC/vlc.exe`) to force that player instead. |
 | `playerArgs` | Extra command-line arguments for the player. Overrides the automatic fullscreen and hide-controls flags. Only meaningful for players that have a command line. |
 | `fullscreen` | Open the video fullscreen. Players with a command line get their fullscreen flag (VLC, mpv, mplayer, MPC-HC/BE, classic Windows Media Player, IINA). The Windows 11 **Media Player** and **Movies & TV** apps are switched to fullscreen by pressing their shortcut once the window appears, so they show a normal window for a moment first. |
-| `hideControls` | Hide the player's control bar, title and mouse pointer (default `true`). Works with VLC, which then opens straight into the video with no interface at all, and with mpv. The Windows 11 Media Player cannot be told to hide its controls; they fade out on their own after a few seconds. |
+| `hideControls` | `false` (default): the standard fullscreen look. The control bar and mouse pointer appear only while the mouse moves over the video and fade out again after a moment. `true`: never show them. VLC then opens straight into the video with no interface at all; mpv drops its on-screen controller. The Windows 11 Media Player cannot be told to hide its controls; they fade out on their own after a few seconds. |
 | `closeWhenDone` | Close the player when the video finishes (default `true`). The server reads the video's length and closes the player that long after it appears, so this works even for players that would sit on the last frame. |
 | `endGraceSeconds` | Extra seconds to wait after the video's length before closing (default `3`). Raise it if the last moment gets cut off on a slow laptop. |
 | `mediaDir` | Optional base folder for **relative** video paths. Empty means the project folder. |
@@ -89,7 +89,8 @@ On this laptop:  http://localhost:3000
 | `buttons[]` | Up to five for this MVP: `id`, `label`, `icon`, and `file`. |
 
 > **Recommended player: VLC.** With `playerPath` pointing at VLC, a video opens
-> directly in fullscreen with no controls, and VLC quits by itself at the end.
+> directly in fullscreen, shows its controls only when the mouse moves, and
+> quits by itself at the end.
 > The Windows 11 Media Player cannot do the first two: it opens in a window
 > before switching to fullscreen, and briefly shows its control bar. VLC is
 > free from <https://www.videolan.org>. Leave `playerPath` empty to use the
@@ -119,20 +120,23 @@ startup. The server still starts, so you can fix `config.json` and restart.
 
 ### Hiding the address bar
 
-The page switches itself to **fullscreen on the first press** of the remote
-(or the first click or tap), which hides the browser's address bar. Browsers
-only allow fullscreen after a press like that, so it cannot happen the moment
-the page loads. If fullscreen is left (Esc or Back), the next press brings it
-back.
+The page asks for **fullscreen as soon as it loads**, which hides the
+browser's address bar. Most browsers refuse that until the user has pressed
+something, so where it is refused the page goes fullscreen on the **first
+press** of the remote (or the first click or tap) instead. Press **Esc** to
+leave fullscreen; the page then stays windowed until it is reloaded.
 
 - **Phone or tablet:** use the browser's **Add to Home Screen**. Opening the
   page from that icon starts it without any browser bars.
-- **Laptop or PC used as the remote:** start the browser in kiosk mode, which
-  never shows the address bar:
+- **Laptop or PC used as the remote:** start the browser already fullscreen.
+  Press **F11** to leave it:
 
   ```
-  "C:/Program Files/Google/Chrome/Application/chrome.exe" --kiosk http://<ip>:3000
+  "C:/Program Files/Google/Chrome/Application/chrome.exe" --start-fullscreen http://<ip>:3000
   ```
+
+  Or use `--kiosk` instead of `--start-fullscreen` to lock the address bar
+  away completely (only Alt+F4 closes it).
 
 - **TV browsers** differ. If fullscreen does not kick in, look for a
   fullscreen or "hide toolbar" option in the TV browser's own menu.
@@ -174,6 +178,8 @@ Remove-NetFirewallRule -DisplayName "TV Video Remote 3000"
   control.
 - A **phone or tablet** browser works as the remote too; the layout switches to
   one button per row.
+- Bigger screens show more buttons per row: **3** by default, **4** from
+  1200px wide, **5** from 1600px (a 1080p TV) and at most **6** from 2000px.
 
 ## 6. Troubleshooting
 
@@ -203,7 +209,7 @@ Remove-NetFirewallRule -DisplayName "TV Video Remote 3000"
 
 **The video plays on the wrong screen**
 - Make the display you want the **primary** one (see section 5), or set
-  set `"hideControls": false` and give VLC its monitor flag, e.g.
+  give VLC its monitor flag, e.g.
   `"playerArgs": ["--fullscreen", "--play-and-exit", "--qt-fullscreen-screennumber=1"]`.
 
 **The video does not open fullscreen (Windows 11 Media Player)**

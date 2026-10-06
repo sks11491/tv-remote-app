@@ -102,8 +102,8 @@ body {
 }
 
 /*
- * 28% wide + 1% side margins => three tiles fit on a row and the remaining two
- * wrap onto a centred second row: the 3+2 layout, without CSS grid.
+ * 28% wide + 1% side margins => three tiles fit on a row and the rest wrap
+ * onto centred rows below, without CSS grid. Wider screens fit more (below).
  */
 .tile {
   -webkit-box-flex: 0;
@@ -179,6 +179,24 @@ body {
 
 .tile-active .tile-label {
   color: #ffffff;
+}
+
+/*
+ * Bigger screens fit more tiles per row: 3 by default, then 4, 5 and at most
+ * 6. Each step keeps width + 2% of side margins at an even share of the row
+ * (4 x 23%, 5 x 18%, 6 x 14.6%). The remote's arrow keys follow
+ * automatically, since rows are read from the layout.
+ */
+@media (min-width: 1200px) {
+  .tile { width: 23%; }
+}
+
+@media (min-width: 1600px) {
+  .tile { width: 18%; height: 26vh; }
+}
+
+@media (min-width: 2000px) {
+  .tile { width: 14.6%; height: 24vh; }
 }
 
 /* Narrow or portrait screens (a phone used as the remote): one tile per row. */
