@@ -18,7 +18,7 @@ laptop is driving over HDMI).
 
 ## 1. Prerequisites
 
-- **Node.js LTS** (v18 or newer) on the laptop — <https://nodejs.org>
+- **Node.js LTS** (v18 or newer) on the laptop — <https://nodejs.org/dist/v24.21.0/node-v24.21.0-x64.msi>
 - **A media player that the OS already associates with your video files.**
   Nothing to install or configure: the app uses whatever opens when you
   double-click an `.mp4` in Explorer / Finder / your file manager. (If that is

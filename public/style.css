@@ -13,13 +13,23 @@
 }
 
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;              /* a TV page must never scroll */
+  overflow-x: hidden;            /* never scroll sideways */
+}
+
+/*
+ * The page fills the screen but may grow taller than it, so it can scroll
+ * when the tiles do not fit (a laptop window, a phone with one tile per row).
+ * When everything fits -- the usual TV case -- there is nothing to scroll.
+ */
+html {
+  height: 100%;
+  overflow-y: auto;
 }
 
 body {
+  min-height: 100%;
   background-color: #0b0f15;
   color: #e8eef7;
   font-family: Arial, Helvetica, sans-serif;
@@ -189,4 +199,15 @@ body {
   }
   .tile-label { font-size: 32px; text-align: left; }
   .banner { font-size: 26px; padding: 16px; }
+}
+
+/*
+ * Laptops and desktops: show the mouse pointer again. Only devices with a
+ * precise pointer that can hover (a mouse or trackpad) match this, so TVs
+ * driven by a D-pad and touch tablets keep the cursor hidden. Older TV
+ * browsers that do not understand the query simply ignore it.
+ */
+@media (hover: hover) and (pointer: fine) {
+  body { cursor: default; }
+  .tile { cursor: pointer; }
 }
