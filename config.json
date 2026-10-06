@@ -1,9 +1,10 @@
 {
   "port": 3000,
 
-  "playerPath": "",
+  "playerPath": "C:/Program Files/VideoLAN/VLC/vlc.exe",
   "playerArgs": [],
   "fullscreen": true,
+  "hideControls": true,
   "closeWhenDone": true,
   "endGraceSeconds": 3,
 

@@ -49,6 +49,7 @@ function loadConfig() {
   cfg.playerPath = cfg.playerPath ? expandPath(cfg.playerPath) : '';
   cfg.playerArgs = Array.isArray(cfg.playerArgs) ? cfg.playerArgs : [];
   cfg.fullscreen = cfg.fullscreen !== false;
+  cfg.hideControls = cfg.hideControls !== false;
   cfg.closeWhenDone = cfg.closeWhenDone !== false;
   cfg.endGraceSeconds = typeof cfg.endGraceSeconds === 'number' ? cfg.endGraceSeconds : 3;
   cfg.buttons = Array.isArray(cfg.buttons) ? cfg.buttons : [];
@@ -279,6 +280,7 @@ app.post('/api/play/:id', function (req, res) {
       playerPath: config.playerPath,
       playerArgs: config.playerArgs,
       fullscreen: config.fullscreen,
+      hideControls: config.hideControls,
       closeWhenDone: config.closeWhenDone,
       endGraceSeconds: config.endGraceSeconds
     });

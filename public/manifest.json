@@ -1,0 +1,13 @@
+{
+  "name": "TV Video Remote",
+  "short_name": "TV Remote",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#0a2240",
+  "theme_color": "#0a2240",
+  "icons": [
+    { "src": "icons/1.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

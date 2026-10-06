@@ -26,12 +26,17 @@ html, body {
 html {
   height: 100%;
   overflow-y: auto;
+  background-color: #071a33;     /* shows below the gradient when scrolled */
 }
 
 body {
   min-height: 100%;
-  background-color: #0b0f15;
-  color: #e8eef7;
+  /* Corporate palette: deep navy page, mid-blue surfaces, white text. */
+  background-color: #0a2240;
+  background-image: -webkit-linear-gradient(top, #0d2b52 0%, #071a33 100%);
+  background-image: linear-gradient(to bottom, #0d2b52 0%, #071a33 100%);
+  background-attachment: fixed;
+  color: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
   cursor: none;                  /* there is no mouse on a TV */
   -webkit-user-select: none;
@@ -60,14 +65,14 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-bottom: 2px solid #1d2733;
+  border-bottom: 2px solid #1d4a85;
   -webkit-transition: background-color 150ms linear;
   transition: background-color 150ms linear;
 }
 
-.banner-idle    { background-color: #121923; color: #8fa3bd; }
-.banner-playing { background-color: #10351f; color: #7df2a8; }
-.banner-error   { background-color: #3d1414; color: #ff9b9b; }
+.banner-idle    { background-color: #0f2f5a; color: #b9cff0; }
+.banner-playing { background-color: #0b5cad; color: #ffffff; }
+.banner-error   { background-color: #7a1f2b; color: #ffdfe3; }
 
 /* ---------------------------------------------------------------- grid */
 
@@ -93,7 +98,7 @@ body {
 
 .loading {
   font-size: 32px;
-  color: #6b7f99;
+  color: #8aa9d6;
 }
 
 /*
@@ -110,9 +115,9 @@ body {
   min-height: 190px;
   margin: 12px 1%;
   padding: 18px 12px;
-  background-color: #182230;
-  color: #e8eef7;
-  border: 3px solid #26354a;
+  background-color: #123a6d;
+  color: #ffffff;
+  border: 3px solid #1f5096;
   border-radius: 18px;
   font-family: inherit;
   cursor: none;
@@ -158,22 +163,22 @@ body {
  * no pointer, so :hover would never fire.
  */
 .tile:focus {
-  border-color: #ffd54a;
-  background-color: #24344a;
-  -webkit-box-shadow: 0 0 0 6px #ffd54a, 0 0 28px 6px rgba(255, 213, 74, 0.35);
-  box-shadow: 0 0 0 6px #ffd54a, 0 0 28px 6px rgba(255, 213, 74, 0.35);
+  border-color: #ffffff;
+  background-color: #1a5299;
+  -webkit-box-shadow: 0 0 0 6px #5fb0ff, 0 0 28px 6px rgba(95, 176, 255, 0.45);
+  box-shadow: 0 0 0 6px #5fb0ff, 0 0 28px 6px rgba(95, 176, 255, 0.45);
   -webkit-transform: scale(1.06);
   transform: scale(1.06);
 }
 
 /* The video this button started is the one currently playing. */
 .tile-active {
-  border-color: #3ddc84;
-  background-color: #143a24;
+  border-color: #8fd0ff;
+  background-color: #0a64c2;
 }
 
 .tile-active .tile-label {
-  color: #7df2a8;
+  color: #ffffff;
 }
 
 /* Narrow or portrait screens (a phone used as the remote): one tile per row. */

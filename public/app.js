@@ -228,6 +228,35 @@
     return msg;
   }
 
+  /* ----------------------------------------------------------- fullscreen */
+
+  /*
+   * Hide the browser's address bar by going fullscreen. Browsers only allow
+   * that from a user action, so it happens on the first remote press, click
+   * or tap -- and again after it was left (Esc, Back), so the page settles
+   * back into fullscreen on the next press. Silently does nothing where the
+   * browser does not support it.
+   */
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement ||
+              document.mozFullScreenElement || document.msFullscreenElement);
+  }
+
+  function enterFullscreen() {
+    if (isFullscreen()) { return; }
+    var el = document.documentElement;
+    var req = el.requestFullscreen || el.webkitRequestFullscreen ||
+              el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (!req) { return; }
+    try {
+      var result = req.call(el);
+      // Newer browsers return a promise; a refusal is not worth an error.
+      if (result && typeof result.then === 'function') {
+        result.then(null, function () {});
+      }
+    } catch (e) { /* not allowed here -- carry on windowed */ }
+  }
+
   /* --------------------------------------------------------- build the UI */
 
   function makeTile(button) {
@@ -306,6 +335,9 @@
     var code = e.keyCode || e.which;
     var key = e.key || '';
 
+    // Escape is how a laptop user leaves fullscreen; do not fight that.
+    if (code !== 27 && key !== 'Escape') { enterFullscreen(); }
+
     // Left / Right / Up / Down
     if (code === 37 || key === 'ArrowLeft')  { e.preventDefault(); moveFocus(-1, 0); return; }
     if (code === 39 || key === 'ArrowRight') { e.preventDefault(); moveFocus(1, 0);  return; }
@@ -340,6 +372,8 @@
   /* ---------------------------------------------------------------- wire up */
 
   document.addEventListener('keydown', onKeyDown, false);
+  document.addEventListener('click', enterFullscreen, false);
+  document.addEventListener('touchend', enterFullscreen, false);
 
   // No pointer affordances on a TV.
   document.addEventListener('contextmenu', function (e) { e.preventDefault(); }, false);
