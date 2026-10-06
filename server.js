@@ -112,6 +112,17 @@ function resolveIcon(icon, dirs) {
 }
 
 var ICON_TYPES = /\.(svg|png|jpe?g|gif|webp|bmp|ico|avif)$/i;
+// Photos and screenshots fill the whole tile as a thumbnail; anything else
+// (SVG symbols, .ico) is drawn as a small icon above the label.
+var THUMB_TYPES = /\.(png|jpe?g|gif|webp|bmp|avif)$/i;
+
+// The label is optional. Without one, the banner and the server log name the
+// video by its file name instead ("intro" for intro.mp4).
+function displayName(b) {
+  if (b.label) { return String(b.label); }
+  if (b.file) { return path.basename(String(b.file)).replace(/\.[^.]+$/, ''); }
+  return String(b.id);
+}
 
 var config = loadConfig();
 
@@ -134,20 +145,20 @@ function selfCheck() {
   }
 
   config.buttons.forEach(function (b) {
-    if (!b.id || !b.label || !b.file) {
-      console.warn('WARNING: button is missing id/label/file: ' + JSON.stringify(b));
+    if (!b.id || !b.file) {
+      console.warn('WARNING: button is missing id/file: ' + JSON.stringify(b));
       problems++;
       return;
     }
     if (!fs.existsSync(b.resolvedFile)) {
-      console.warn('WARNING: [' + b.id + ' ' + b.label + '] file not found: ' + b.resolvedFile);
+      console.warn('WARNING: [' + b.id + ' ' + displayName(b) + '] file not found: ' + b.resolvedFile);
       problems++;
     }
     if (b.icon && !fs.existsSync(b.resolvedIcon)) {
-      console.warn('WARNING: [' + b.id + ' ' + b.label + '] icon not found: ' + b.resolvedIcon);
+      console.warn('WARNING: [' + b.id + ' ' + displayName(b) + '] icon not found: ' + b.resolvedIcon);
       problems++;
     } else if (b.icon && !ICON_TYPES.test(b.resolvedIcon)) {
-      console.warn('WARNING: [' + b.id + ' ' + b.label + '] icon is not an image file: ' +
+      console.warn('WARNING: [' + b.id + ' ' + displayName(b) + '] icon is not an image file: ' +
                    b.resolvedIcon);
       problems++;
     }
@@ -233,10 +244,13 @@ app.get('/api/buttons', function (req, res) {
     .filter(function (b) { return b && b.id; })
     .map(function (b) {
       var id = String(b.id);
+      var hasIcon = iconUsable(b);
       return {
         id: id,
-        label: b.label || id,
-        icon: iconUsable(b) ? 'api/icon/' + encodeURIComponent(id) : ''
+        label: b.label ? String(b.label) : '',   // shown on the tile; may be empty
+        name: displayName(b),                    // for the banner and screen readers
+        icon: hasIcon ? 'api/icon/' + encodeURIComponent(id) : '',
+        thumb: hasIcon && THUMB_TYPES.test(b.resolvedIcon)
       };
     }));
 });
@@ -276,7 +290,7 @@ app.post('/api/play/:id', function (req, res) {
   stopCurrent().then(function () {
     return player.play(button.resolvedFile, {
       buttonId: id,
-      label: button.label || id,
+      label: displayName(button),
       playerPath: config.playerPath,
       playerArgs: config.playerArgs,
       fullscreen: config.fullscreen,
@@ -297,9 +311,9 @@ app.post('/api/play/:id', function (req, res) {
         if (current === session) { current = null; }
         throw new Error('Could not start the player: ' + session.spawnError.message);
       }
-      console.log('Playing [' + id + '] ' + (button.label || '') +
+      console.log('Playing [' + id + '] ' + displayName(button) +
                   '  via ' + session.strategy.name);
-      res.json({ ok: true, playing: id, label: button.label || id });
+      res.json({ ok: true, playing: id, label: displayName(button) });
     });
   }).catch(function (err) {
     console.error('Play failed for [' + id + ']: ' + err.message);

@@ -70,7 +70,7 @@ On this laptop:  http://localhost:3000
   "buttons": [
     { "id": "1", "label": "Intro", "icon": "icons/1.svg", "file": "media/intro.mp4" },
     { "id": "2", "label": "Demo",  "icon": "D:/Event/logos/demo.png", "file": "D:/Event/videos/demo.mp4" },
-    { "id": "3", "label": "Team",  "icon": "~/Pictures/team.jpg", "file": "%USERPROFILE%/Videos/team.mkv" }
+    { "id": "3", "icon": "~/Pictures/team.jpg", "file": "%USERPROFILE%/Videos/team.mkv" }
   ]
 }
 ```
@@ -86,7 +86,7 @@ On this laptop:  http://localhost:3000
 | `endGraceSeconds` | Extra seconds to wait after the video's length before closing (default `3`). Raise it if the last moment gets cut off on a slow laptop. |
 | `mediaDir` | Optional base folder for **relative** video paths. Empty means the project folder. |
 | `iconDir` | Optional base folder for **relative** icon paths. Empty means `public/`, then the project folder. |
-| `buttons[]` | Up to five for this MVP: `id`, `label`, `icon`, and `file`. |
+| `buttons[]` | Each needs an `id` and a `file`. `icon` and `label` are optional; see *Icons and thumbnails* below. |
 
 > **Recommended player: VLC.** With `playerPath` pointing at VLC, a video opens
 > directly in fullscreen, shows its controls only when the mouse moves, and
@@ -104,7 +104,17 @@ different folder if you like. Both `file` and `icon` accept:
 - your **home folder**: `~/Videos/intro.mp4`
 - **environment variables**: `%USERPROFILE%/Videos/intro.mp4` or `${HOME}/Videos/intro.mp4`
 
-Icons may be `.svg`, `.png`, `.jpg`, `.gif`, `.webp`, `.bmp`, `.ico` or `.avif`.
+**Icons and thumbnails.** Icons may be `.svg`, `.png`, `.jpg`, `.gif`,
+`.webp`, `.bmp`, `.ico` or `.avif`, and they show in two ways:
+
+- A **picture** (`.png`, `.jpg`, `.gif`, `.webp`, `.bmp`, `.avif`) is a
+  thumbnail: it fills the whole tile, cropped to fit. Use a 16:9 image, such as
+  a frame from the video, around 640×360. With a `label`, the label sits on a
+  dark strip along the bottom of the picture.
+- An **`.svg`** (or `.ico`) is a small symbol above the label.
+
+The `label` can be left out, so the tile shows only its picture or symbol.
+The banner then names the video by its file name (`team` for `team.mkv`).
 The TV fetches them through the server by button id, so their location on disk
 is never revealed and no other file can be requested.
 
@@ -246,7 +256,7 @@ Remove-NetFirewallRule -DisplayName "TV Video Remote 3000"
 | Method | Route | Behaviour |
 |---|---|---|
 | GET | `/` | Serves `public/index.html` |
-| GET | `/api/buttons` | `[{id, label, icon}]` — **never** the file paths; `icon` is an `/api/icon/:id` URL |
+| GET | `/api/buttons` | `[{id, label, name, icon, thumb}]` — **never** the file paths; `icon` is an `/api/icon/:id` URL, `thumb` is true for picture icons, `name` is the label or the video's file name |
 | GET | `/api/icon/:id` | The icon image configured for that button, wherever it is on disk |
 | POST | `/api/play/:id` | Stops anything playing, then plays the file mapped to `id`. `{ok:true, playing:id}`, 404 for an unknown id, 500 with a readable message if the file or player is missing |
 | POST | `/api/stop` | Stops playback |

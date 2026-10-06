@@ -83,7 +83,7 @@
     var i;
     for (i = 0; i < tiles.length; i++) {
       var isActive = id !== null && tiles[i].getAttribute('data-id') === id;
-      tiles[i].className = isActive ? 'tile tile-active' : 'tile';
+      tiles[i].className = tiles[i].baseClass + (isActive ? ' tile-active' : '');
     }
     if (new Date().getTime() < errorUntil) { return; }  // let the error stand
     if (id === null) {
@@ -277,22 +277,35 @@
     el.className = 'tile';
     el.setAttribute('data-id', button.id);
     el.setAttribute('tabindex', '0');
+    // The tile may show only a picture, so name it for screen readers.
+    el.setAttribute('aria-label', button.name);
+    el.setAttribute('data-name', button.name);
 
+    // A photo (PNG, JPG, ...) fills the whole tile as a thumbnail, with the
+    // label, if any, as a caption strip along the bottom. An SVG stays a
+    // small symbol above the label.
     if (button.icon) {
       var img = document.createElement('img');
-      img.className = 'tile-icon';
+      img.className = button.thumb ? 'tile-thumb' : 'tile-icon';
       img.src = button.icon;
       img.alt = '';
       el.appendChild(img);
+      if (button.thumb) { el.className += ' tile-has-thumb'; }
     }
 
-    var label = document.createElement('span');
-    label.className = 'tile-label';
-    label.appendChild(document.createTextNode(button.label));
-    el.appendChild(label);
+    if (button.label) {
+      var label = document.createElement('span');
+      label.className = 'tile-label';
+      label.appendChild(document.createTextNode(button.label));
+      el.appendChild(label);
+    } else {
+      el.className += ' tile-no-label';
+    }
+    // The highlight for the playing video is added on top of these classes.
+    el.baseClass = el.className;
 
     // Covers OK on remotes that synthesise a click, plus mouse/touch testing.
-    el.onclick = function () { play(button.id, button.label); };
+    el.onclick = function () { play(button.id, button.name); };
 
     return el;
   }
@@ -362,8 +375,7 @@
       var active = document.activeElement;
       if (active && active.getAttribute && active.getAttribute('data-id')) {
         var id = active.getAttribute('data-id');
-        var labelEl = active.getElementsByClassName('tile-label')[0];
-        play(id, labelEl ? labelEl.textContent || labelEl.innerText : id);
+        play(id, active.getAttribute('data-name') || id);
       } else if (tiles.length) {
         tiles[0].focus();
       }

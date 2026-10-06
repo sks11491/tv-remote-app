@@ -158,6 +158,53 @@ body {
 }
 
 /*
+ * Photo thumbnails (PNG, JPG, ...) fill the whole tile, cropped to fit. The
+ * label, when there is one, sits on a dark strip along the bottom so it stays
+ * readable over any picture. Absolute positioning rather than object-position
+ * tricks keeps this working on old TV browsers.
+ */
+.tile-has-thumb {
+  position: relative;
+  overflow: hidden;              /* clips the picture to the rounded corners */
+  padding: 0;
+  background-color: #071a33;
+}
+
+.tile-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  display: block;
+}
+
+.tile-has-thumb .tile-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: none;
+  padding: 10px 14px;
+  font-size: 30px;
+  background-color: rgba(7, 26, 51, 0.82);
+  -webkit-transition: background-color 120ms linear;
+  transition: background-color 120ms linear;
+}
+
+.tile-has-thumb:focus .tile-label { background-color: rgba(26, 82, 153, 0.92); }
+.tile-has-thumb.tile-active .tile-label { background-color: rgba(10, 100, 194, 0.92); }
+
+/* An SVG symbol with no label: let the symbol carry the tile on its own. */
+.tile-no-label .tile-icon {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 0;
+}
+
+/*
  * Focus must be unmistakable from across the room: thick bright ring, lighter
  * background, and a scale-up. Driven by :focus, never :hover -- a TV remote has
  * no pointer, so :hover would never fire.
@@ -221,6 +268,11 @@ body {
     margin-right: 18px;
   }
   .tile-label { font-size: 32px; text-align: left; }
+  /* A thumbnail tile keeps the picture's shape: 16:9 of the tile's 90% width. */
+  .tile-has-thumb { height: 50vw; padding: 0; }
+  .tile-has-thumb .tile-label { font-size: 26px; }
+  .tile-no-label .tile-icon { width: 72px; height: 72px; margin-right: 0; }
+  .tile-no-label { -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; }
   .banner { font-size: 26px; padding: 16px; }
 }
 
