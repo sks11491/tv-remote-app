@@ -104,9 +104,6 @@ startup. The server still starts, so you can fix `config.json` and restart.
 ## 3. Connect the TV
 
 1. Put the laptop and the TV on the **same Wi-Fi**.
-   *Or:* turn on the laptop's hotspot (Windows: **Settings → Network & internet
-   → Mobile hotspot**; macOS: **System Settings → General → Sharing → Internet
-   Sharing**) and join the TV to it.
 2. Run `npm start` and note the printed `http://<ip>:3000` address.
 3. Open the TV's web browser and type that address in.
 4. **Bookmark it** — typing an IP with a remote once is enough for anyone.
@@ -132,21 +129,11 @@ To remove the rule later:
 Remove-NetFirewallRule -DisplayName "TV Video Remote 3000"
 ```
 
-**macOS** — **System Settings → Network → Firewall → Options**, then allow
-incoming connections for `node`. If the firewall is off, nothing is needed.
-
-**Linux** (ufw):
-
-```sh
-sudo ufw allow from 192.168.0.0/16 to any port 3000 proto tcp
-```
-
 ## 5. Tips
 
 - **Stop the laptop from sleeping.** A sleeping laptop is an unreachable server.
   Windows: **Settings → System → Power → Screen and sleep → Never** (while
-  plugged in). macOS: **Settings → Lock Screen**, and
-  `caffeinate -s` while running.
+  plugged in).
 - **Keep the IP stable.** Reserve the laptop's address in your router's DHCP
   settings, or give it a static IP, so the TV bookmark keeps working after a
   reboot.
@@ -238,10 +225,6 @@ association is resolved:
   server spawns it directly. If it is a packaged Store app, the file is handed to
   the shell with `ShellExecute` and the app's processes are then located by their
   package.
-- **macOS** — `NSWorkspace` reports the default app; it is launched with
-  `open -n -a`.
-- **Linux** — `xdg-mime query default` gives a `.desktop` file, whose `Exec=`
-  line gives the executable.
 
 **Safety.** The browser only ever sends a button **id**; paths are looked up in
 `config.json` server-side, so a client can never ask for an arbitrary file.
@@ -284,9 +267,3 @@ tv-video-remote/
   media/             put your video files here (or point elsewhere in config)
   README.md
 ```
-
-## Not in this MVP
-
-No authentication, admin UI, uploads, playlists, volume or seek controls,
-multiple users, or database. See the "Next steps" section of
-`tv-video-remote-mvp-prompt.md`.
