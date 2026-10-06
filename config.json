@@ -10,6 +10,7 @@
 
   "mediaDir": "",
   "iconDir": "",
+  "logo": "logo.jpg",
 
   "buttons": [
       { "id": "1", "label": "Intro",   "icon": "thumbs/intro.png", "file": "media/intro.mp4" },

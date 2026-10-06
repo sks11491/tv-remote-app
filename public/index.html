@@ -17,7 +17,9 @@
 
   <!-- Status / error banner. Text is swapped by app.js. -->
   <div id="banner" class="banner banner-idle">
-    <span id="banner-text">Ready &mdash; pick a video</span>
+    <span id="banner-text" class="banner-text">Ready &mdash; pick a video</span>
+    <!-- Optional logo (config.json "logo"); removed by app.js if there is none. -->
+    <img id="logo" class="logo" src="api/logo" alt="">
   </div>
 
   <!-- Buttons are injected here from /api/buttons -->

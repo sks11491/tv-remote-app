@@ -416,6 +416,22 @@
     if (document.activeElement === document.body && tiles.length) { tiles[0].focus(); }
   };
 
+  // The logo sits at the right end of the banner. Pad the text by the same
+  // width on the left so it stays centred on the screen, not in what is left.
+  var logoEl = document.getElementById('logo');
+  if (logoEl) {
+    var placeLogo = function () {
+      bannerTextEl.style.paddingLeft = logoEl.offsetWidth + 'px';
+    };
+    logoEl.onerror = function () {
+      if (logoEl.parentNode) { logoEl.parentNode.removeChild(logoEl); }
+      bannerTextEl.style.paddingLeft = '';
+    };
+    logoEl.onload = placeLogo;
+    if (logoEl.complete && logoEl.naturalWidth) { placeLogo(); }
+    window.addEventListener('resize', placeLogo, false);
+  }
+
   enterFullscreen();
   loadButtons();
   setInterval(pollStatus, POLL_MS);

@@ -67,6 +67,9 @@ function loadConfig() {
     if (b.icon) { b.resolvedIcon = resolveIcon(expandPath(b.icon), iconDirs); }
   });
 
+  // Optional logo for the top-right corner of the page; found like an icon.
+  cfg.resolvedLogo = cfg.logo ? resolveIcon(expandPath(cfg.logo), iconDirs) : '';
+
   return cfg;
 }
 
@@ -163,6 +166,14 @@ function selfCheck() {
       problems++;
     }
   });
+
+  if (config.logo && !fs.existsSync(config.resolvedLogo)) {
+    console.warn('WARNING: logo not found: ' + config.resolvedLogo);
+    problems++;
+  } else if (config.logo && !ICON_TYPES.test(config.resolvedLogo)) {
+    console.warn('WARNING: logo is not an image file: ' + config.resolvedLogo);
+    problems++;
+  }
 
   if (config.playerPath && !fs.existsSync(config.playerPath)) {
     console.warn('WARNING: playerPath does not exist: ' + config.playerPath);
@@ -261,6 +272,15 @@ app.get('/api/icon/:id', function (req, res) {
   var b = buttonsById[String(req.params.id)];
   if (!iconUsable(b)) { return res.status(404).end(); }
   res.sendFile(b.resolvedIcon, { dotfiles: 'allow', maxAge: 0 }, function (err) {
+    if (err && !res.headersSent) { res.status(404).end(); }
+  });
+});
+
+// The page always asks for the logo and hides the spot when this is a 404.
+app.get('/api/logo', function (req, res) {
+  var file = config.resolvedLogo;
+  if (!file || !ICON_TYPES.test(file) || !fs.existsSync(file)) { return res.status(404).end(); }
+  res.sendFile(file, { dotfiles: 'allow', maxAge: 0 }, function (err) {
     if (err && !res.headersSent) { res.status(404).end(); }
   });
 });

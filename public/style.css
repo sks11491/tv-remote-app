@@ -68,6 +68,36 @@ body {
   border-bottom: 2px solid #1d4a85;
   -webkit-transition: background-color 150ms linear;
   transition: background-color 150ms linear;
+  /* Text in the middle, optional logo at the right end. */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.banner-text {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-width: 0;                  /* lets the ellipsis work inside flex */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*
+ * The logo in the top-right corner. It is taller than the banner text, so it
+ * eats into the banner's padding rather than adding all its height on top.
+ */
+.logo {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  display: block;
+  height: 150px;
+  width: auto;
+  margin: -12px 0 -12px 24px;
+  border-radius: 6px;
 }
 
 .banner-idle    { background-color: #0f2f5a; color: #b9cff0; }
@@ -240,6 +270,7 @@ body {
 
 @media (min-width: 1600px) {
   .tile { width: 18%; height: 26vh; }
+  .logo { height: 190px; }
 }
 
 @media (min-width: 2000px) {
@@ -274,6 +305,7 @@ body {
   .tile-no-label .tile-icon { width: 72px; height: 72px; margin-right: 0; }
   .tile-no-label { -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; }
   .banner { font-size: 26px; padding: 16px; }
+  .logo { height: 96px; margin-left: 12px; }
 }
 
 /*

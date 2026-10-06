@@ -86,6 +86,7 @@ On this laptop:  http://localhost:3000
 | `endGraceSeconds` | Extra seconds to wait after the video's length before closing (default `3`). Raise it if the last moment gets cut off on a slow laptop. |
 | `mediaDir` | Optional base folder for **relative** video paths. Empty means the project folder. |
 | `iconDir` | Optional base folder for **relative** icon paths. Empty means `public/`, then the project folder. |
+| `logo` | Optional picture for the top-right corner of the page (`.png`, `.jpg`, `.svg`, ...). Found like an icon: absolute, relative to `iconDir`/`public/`, `~` or `%VARS%`. Leave it out for no logo. |
 | `buttons[]` | Each needs an `id` and a `file`. `icon` and `label` are optional; see *Icons and thumbnails* below. |
 
 > **Recommended player: VLC.** With `playerPath` pointing at VLC, a video opens
